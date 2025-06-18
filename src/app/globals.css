@@ -312,3 +312,90 @@ p {
 .dashboard-footer {
   margin-top: 30px;
 }
+/* Stile für Vorschlags-Anzeige (all & my proposals) */
+.proposals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsives Raster */
+  gap: 30px; /* Abstand zwischen den Karten */
+  margin-top: 30px;
+  justify-content: center; /* Zentriert die Karten, wenn nicht alle Spalten gefüllt sind */
+}
+
+.proposal-card {
+  background-color: var(--color-secondary-dark);
+  border: 1px solid var(--color-border-dark);
+  border-radius: 10px;
+  overflow: hidden; /* Für abgerundete Bildecken */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: left; /* Text in der Karte linksbündig */
+}
+
+.proposal-card:hover {
+  transform: translateY(-5px); /* Leichter Hoch-Effekt beim Hover */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+.proposal-image-wrapper {
+  width: 100%;
+  height: 200px; /* Feste Höhe für Bilder */
+  overflow: hidden;
+  position: relative;
+}
+
+.proposal-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Bildausschnitt füllen */
+  display: block; /* Entfernt zusätzlichen Platz unter dem Bild */
+}
+
+.proposal-content {
+  padding: 20px;
+}
+
+.proposal-content h3 {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+  color: var(--color-accent-gold);
+  border-bottom: none; /* Keine Linie hier */
+  padding-bottom: 0;
+  text-transform: none; /* Keine Uppercase hier */
+  letter-spacing: normal;
+}
+
+.proposal-content p {
+  font-size: 0.95em;
+  color: var(--color-text-light);
+  margin-bottom: 8px;
+}
+
+.proposal-status {
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-block; /* Für ein kleines Badge */
+  margin-top: 15px;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.5px;
+}
+
+/* Statusfarben */
+.status-pending {
+  background-color: #8a6d00; /* Dunkleres Gold/Braun */
+  color: #fff;
+}
+
+.status-approved {
+  background-color: var(--color-success);
+  color: #fff;
+}
+
+.status-completed {
+  background-color: var(--color-primary-dark);
+  color: var(--color-text-light);
+  border: 1px solid var(--color-border-dark);
+}
