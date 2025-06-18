@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image'; // Für optimierte Bildanzeige
 import { supabase } from '../../../lib/supabase';
+import { User } from '@supabase/supabase-js'; // HINZUFÜGEN
 
 // Typdefinition für einen Vorschlag
 interface Proposal {
@@ -26,7 +27,7 @@ export default function AllProposalsPage() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
-  const [currentUser, setCurrentUser] = useState<User | null>(null); // Für RLS-Check
+  const [_currentUser, setCurrentUser] = useState<User | null>(null); // Für RLS-Check (ignoriert vom Linter)
 
   useEffect(() => {
     const fetchProposals = async () => {
@@ -38,7 +39,7 @@ export default function AllProposalsPage() {
         router.push('/login'); // Umleitung, falls nicht angemeldet
         return;
       }
-      setCurrentUser(user);
+      setCurrentUser(session?.user || null);
 
       // Hole alle Vorschläge, die "approved" oder "completed" sind.
       // Unsere RLS-Policy erlaubt dies bereits für angemeldete Benutzer.
