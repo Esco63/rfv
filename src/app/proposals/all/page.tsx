@@ -4,9 +4,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image'; // Für optimierte Bildanzeige
+import Image from 'next/image';
 import { supabase } from '../../../lib/supabase';
-import { User } from '@supabase/supabase-js'; // HINZUFÜGEN
+import { User } from '@supabase/supabase-js'; // Benötigt für den Typ User
 
 // Typdefinition für einen Vorschlag
 interface Proposal {
@@ -19,7 +19,6 @@ interface Proposal {
   description: string | null;
   status: 'pending' | 'approved' | 'completed';
   user_id: string;
-  // Optional: username vom Ersteller, falls wir das später joinen wollen
 }
 
 export default function AllProposalsPage() {
@@ -27,7 +26,7 @@ export default function AllProposalsPage() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
-  const [_currentUser, setCurrentUser] = useState<User | null>(null); // Für RLS-Check (ignoriert vom Linter)
+  // const [currentUser, setCurrentUser] = useState<User | null>(null); // DIESE ZEILE ENTFERNEN
 
   useEffect(() => {
     const fetchProposals = async () => {
@@ -37,12 +36,11 @@ export default function AllProposalsPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         router.push('/login'); // Umleitung, falls nicht angemeldet
-        return;
+        return; // Frühzeitiger Exit, da kein Benutzer
       }
-      setCurrentUser(session?.user || null);
+      // setCurrentUser(user); // DIESE ZEILE ENTFERNEN
 
       // Hole alle Vorschläge, die "approved" oder "completed" sind.
-      // Unsere RLS-Policy erlaubt dies bereits für angemeldete Benutzer.
       const { data, error: fetchError } = await supabase
         .from('proposals')
         .select('*')
@@ -67,7 +65,7 @@ export default function AllProposalsPage() {
         if (event === 'SIGNED_OUT') {
           router.push('/login');
         } else if (event === 'SIGNED_IN') {
-          setCurrentUser(session?.user || null);
+          // setCurrentUser(session?.user || null); // DIESE ZEILE ENTFERNEN
           fetchProposals(); // Daten neu laden bei Anmeldung
         }
       }
@@ -76,7 +74,7 @@ export default function AllProposalsPage() {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [router]);
+  }, [router]); // Abhängigkeit nur noch von router
 
   if (loading) {
     return (
@@ -122,7 +120,7 @@ export default function AllProposalsPage() {
               <div className="proposal-content">
                 <h3>{proposal.name}</h3>
                 <p><strong>Kategorie:</strong> {proposal.category}</p>
-                <p><strong>Preis:</strong> ${proposal.price.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> {/* Währungsformatierung */}
+                <p><strong>Preis:</strong> ${proposal.price.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                 {proposal.description && <p>{proposal.description}</p>}
                 <p className={`proposal-status status-${proposal.status}`}>
                   Status: {proposal.status === 'approved' ? 'Genehmigt' : 'Abgeschlossen'}
