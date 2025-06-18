@@ -47,8 +47,10 @@ export default function DashboardPage() {
 
     checkUserAndAdminStatus();
 
-    // Optional: Listener für Auth-Zustandsänderungen
-    // Beachte die Korrektur hier: .data.subscription.unsubscribe()
+    // Listener für Auth-Zustandsänderungen
+    // KORRIGIERTE ZEILE: .data.subscription.unsubscribe() ist FALSCH
+    // Die Variable authListener ist bereits das Ergebnis von .data, also { subscription: ... }
+    // Daher ist es korrekt: authListener?.subscription.unsubscribe()
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (event === 'SIGNED_OUT') {
@@ -62,7 +64,7 @@ export default function DashboardPage() {
     );
 
     return () => {
-      // Wichtig: Korrigierte Zeile für .unsubscribe()
+      // DIES IST DIE KORREKTE ZEILE FÜR unsubscribe:
       authListener?.subscription.unsubscribe();
     };
   }, [router]);
