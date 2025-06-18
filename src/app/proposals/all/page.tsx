@@ -26,7 +26,7 @@ export default function AllProposalsPage() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
-  const [currentUser, setCurrentUser] = useState<any>(null); // Für RLS-Check
+  const [currentUser, setCurrentUser] = useState<User | null>(null); // Für RLS-Check
 
   useEffect(() => {
     const fetchProposals = async () => {
