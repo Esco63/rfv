@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '../../../lib/supabase';
-// import { User } from '@supabase/supabase-js'; // DIESE ZEILE KANN GELÖSCHT WERDEN, da User nicht mehr direkt verwendet wird
+// import { User } from '@supabase/supabase-js'; // Nicht mehr benötigt
 
 // Typdefinition für einen Vorschlag
 interface Proposal {
@@ -35,7 +35,7 @@ export default function AllProposalsPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         router.push('/login'); // Umleitung, falls nicht angemeldet
-        return; // Frühzeitiger Exit, da kein Benutzer
+        return;
       }
 
       // Hole alle Vorschläge, die "approved" oder "completed" sind.
@@ -58,8 +58,12 @@ export default function AllProposalsPage() {
     fetchProposals();
 
     // Optional: Listener für Auth-Zustandsänderungen, um Daten neu zu laden
+    // `_` als Präfix für ungenutzte Parameter, um Linter zu beruhigen
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, _session) => { // 'session' wurde zu '_session' umbenannt
+      (event, _session) => { // <-- HIER DIE ÄNDERUNG: `session` zu `_session` geändert.
+                              // ACHTUNG: Ich habe es in der letzten Nachricht bereits hier angepasst.
+                              // Wenn es immer noch meckert, müssen wir den ESLint-Regel deaktivieren.
+                              // Der Fehler kommt also immer noch vom nicht aktualisierten Code.
         if (event === 'SIGNED_OUT') {
           router.push('/login');
         } else if (event === 'SIGNED_IN') {
