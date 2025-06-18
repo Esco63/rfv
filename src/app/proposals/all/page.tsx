@@ -35,7 +35,7 @@ export default function AllProposalsPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         router.push('/login'); // Umleitung, falls nicht angemeldet
-        return;
+        return; // Frühzeitiger Exit, da kein Benutzer
       }
 
       // Hole alle Vorschläge, die "approved" oder "completed" sind.
@@ -58,12 +58,9 @@ export default function AllProposalsPage() {
     fetchProposals();
 
     // Optional: Listener für Auth-Zustandsänderungen, um Daten neu zu laden
-    // `_` als Präfix für ungenutzte Parameter, um Linter zu beruhigen
+    // `_session` wurde komplett entfernt, da es nicht verwendet wird
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, _session) => { // <-- HIER DIE ÄNDERUNG: `session` zu `_session` geändert.
-                              // ACHTUNG: Ich habe es in der letzten Nachricht bereits hier angepasst.
-                              // Wenn es immer noch meckert, müssen wir den ESLint-Regel deaktivieren.
-                              // Der Fehler kommt also immer noch vom nicht aktualisierten Code.
+      (event, /* _session */) => { // <-- HIER DIE ÄNDERUNG: `_session` komplett entfernt oder auskommentiert
         if (event === 'SIGNED_OUT') {
           router.push('/login');
         } else if (event === 'SIGNED_IN') {
