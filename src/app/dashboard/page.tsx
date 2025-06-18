@@ -15,6 +15,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const checkUserAndAdminStatus = async () => {
+      setLoading(true); // Setze loading am Anfang des Effekts auf true
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
@@ -41,12 +42,13 @@ export default function DashboardPage() {
         setIsAdmin(false);
       }
       
-      setLoading(false);
+      setLoading(false); // Setze loading am Ende des Effekts auf false
     };
 
     checkUserAndAdminStatus();
 
     // Optional: Listener für Auth-Zustandsänderungen
+    // Beachte die Korrektur hier: .data.subscription.unsubscribe()
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (event === 'SIGNED_OUT') {
@@ -54,13 +56,14 @@ export default function DashboardPage() {
         } else if (event === 'SIGNED_IN') {
           setUser(session?.user || null);
           // Re-check admin status on sign in
-          checkUserAndAdminStatus();
+          checkUserAndAdminStatus(); // Erneut prüfen, falls sich der Benutzer anmeldet
         }
       }
     );
 
     return () => {
-      authListener?.unsubscribe();
+      // Wichtig: Korrigierte Zeile für .unsubscribe()
+      authListener?.subscription.unsubscribe();
     };
   }, [router]);
 
