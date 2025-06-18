@@ -41,7 +41,8 @@ export default function RegisterPage() {
       return;
     }
 
-    const newUser = signUpData.user;
+    // Explizite Typisierung von newUser, um den 'User' Typ zu verwenden und Linter zufrieden zu stellen
+    const newUser: User | null = signUpData.user;
 
     if (newUser) {
       // 2. Das vom Trigger ERSTELLTE Profil mit dem gewählten Benutzernamen AKTUALISIEREN
@@ -68,6 +69,7 @@ export default function RegisterPage() {
         router.push('/login');
       }, 4000); // 4 Sekunden Wartezeit, um die Nachricht zu lesen
     } else {
+        // Sollte nicht passieren, da signUpError oben abgefangen wird
         setError('Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.');
     }
     setLoading(false);
