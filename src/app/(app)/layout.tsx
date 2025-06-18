@@ -73,7 +73,7 @@ const Sidebar = ({ userProfile, handleLogout, currentPath }: { userProfile: User
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname(); // Um den aktuellen Pfad zu bekommen für aktive Links
-  const [user, setUser] = useState<User | null>(null);
+  const [_user, setUser] = useState<User | null>(null); // 'user' zu '_user' geändert
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -87,7 +87,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setUser(user);
+      setUser(_user);
 
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
