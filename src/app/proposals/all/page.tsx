@@ -60,7 +60,7 @@ export default function AllProposalsPage() {
     // Optional: Listener für Auth-Zustandsänderungen, um Daten neu zu laden
     // `_session` wurde komplett entfernt, da es nicht verwendet wird
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, /* _session */) => { // <-- HIER DIE ÄNDERUNG: `_session` komplett entfernt oder auskommentiert
+      (event, /* _session */) => { // <-- HIER IST DIE KRITISCHE ZEILE (Parameter _session AUSKOMMENTIERT/ENTFERNT)
         if (event === 'SIGNED_OUT') {
           router.push('/login');
         } else if (event === 'SIGNED_IN') {
