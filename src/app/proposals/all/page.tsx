@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '../../../lib/supabase';
-import { User } from '@supabase/supabase-js'; // Benötigt für den Typ User
+// import { User } from '@supabase/supabase-js'; // DIESE ZEILE KANN GELÖSCHT WERDEN, da User nicht mehr direkt verwendet wird
 
 // Typdefinition für einen Vorschlag
 interface Proposal {
@@ -26,7 +26,6 @@ export default function AllProposalsPage() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
-  // const [currentUser, setCurrentUser] = useState<User | null>(null); // DIESE ZEILE ENTFERNEN
 
   useEffect(() => {
     const fetchProposals = async () => {
@@ -38,7 +37,6 @@ export default function AllProposalsPage() {
         router.push('/login'); // Umleitung, falls nicht angemeldet
         return; // Frühzeitiger Exit, da kein Benutzer
       }
-      // setCurrentUser(user); // DIESE ZEILE ENTFERNEN
 
       // Hole alle Vorschläge, die "approved" oder "completed" sind.
       const { data, error: fetchError } = await supabase
@@ -61,11 +59,10 @@ export default function AllProposalsPage() {
 
     // Optional: Listener für Auth-Zustandsänderungen, um Daten neu zu laden
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (event, _session) => { // 'session' wurde zu '_session' umbenannt
         if (event === 'SIGNED_OUT') {
           router.push('/login');
         } else if (event === 'SIGNED_IN') {
-          // setCurrentUser(session?.user || null); // DIESE ZEILE ENTFERNEN
           fetchProposals(); // Daten neu laden bei Anmeldung
         }
       }
@@ -74,7 +71,7 @@ export default function AllProposalsPage() {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [router]); // Abhängigkeit nur noch von router
+  }, [router]);
 
   if (loading) {
     return (
