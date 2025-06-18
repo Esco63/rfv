@@ -10,7 +10,7 @@ const categories = ['Autos', 'Haus', 'Güter', 'Kleidung', 'Tattoos', 'Schmuck']
 
 export default function NewProposalPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null); // State für den angemeldeten Benutzer
+  const [user, setUser] = useState<User | null>(null); // State für den angemeldeten Benutzer
   const [category, setCategory] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [price, setPrice] = useState<string>(''); // Preis als String für Flexibilität
@@ -62,7 +62,7 @@ export default function NewProposalPage() {
       const fileExtension = imageFile.name.split('.').pop();
       const fileName = `<span class="math-inline">\{user\.id\}/</span>{Date.now()}.${fileExtension}`; // Eindeutiger Name
 
-      const { data, error: uploadError } = await supabase.storage
+      const { data: _data, error: uploadError } = await supabase.storage
         .from('proposal-images') // Der Bucket-Name, den wir gleich erstellen!
         .upload(fileName, imageFile, {
           cacheControl: '3600',
