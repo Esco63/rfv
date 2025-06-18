@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase'; // Pfad zum Supabase-Client anpassen!
 import Link from 'next/link';
+import { User } from '@supabase/supabase-js'; // HINZUFÜGEN
 
 const categories = ['Autos', 'Haus', 'Güter', 'Kleidung', 'Tattoos', 'Schmuck'];
 
@@ -62,12 +63,13 @@ export default function NewProposalPage() {
       const fileExtension = imageFile.name.split('.').pop();
       const fileName = `<span class="math-inline">\{user\.id\}/</span>{Date.now()}.${fileExtension}`; // Eindeutiger Name
 
-      const { data: _data, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('proposal-images') // Der Bucket-Name, den wir gleich erstellen!
         .upload(fileName, imageFile, {
-          cacheControl: '3600',
-          upsert: false,
+        cacheControl: '3600',
+        upsert: false,
         });
+    // KEINE ZUWEISUNG AN EINE 'data' VARIABLE
 
       if (uploadError) {
         console.error('Upload Error:', uploadError);
