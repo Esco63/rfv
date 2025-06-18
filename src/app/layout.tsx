@@ -1,5 +1,5 @@
 // src/app/layout.tsx
-import './globals.css'; // DIES IST DER KORREKTE PFAD
+import './globals.css'; // Importiere deine globalen Styles
 
 export const metadata = {
   title: 'Community Panel - RockfordV',
