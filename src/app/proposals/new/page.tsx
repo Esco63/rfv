@@ -61,7 +61,7 @@ export default function NewProposalPage() {
     // 1. Bild hochladen (falls vorhanden)
     if (imageFile) {
       const fileExtension = imageFile.name.split('.').pop();
-      const fileName = `<span class="math-inline">\{user\.id\}/</span>{Date.now()}.${fileExtension}`; // Eindeutiger Name
+      const fileName = user.id + '/' + Date.now() + '.' + fileExtension; // KORRIGIERTE ZEILE
 
       const { error: uploadError } = await supabase.storage
         .from('proposal-images') // Der Bucket-Name, den wir gleich erstellen!
