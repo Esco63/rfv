@@ -1,83 +1,155 @@
-/* src/app/globals.css - RockfordV Schwarz & Gold Theme - Optimiert */
+/* src/app/globals.css - RockfordV Schwarz & Gold Theme - Ultimatives Profi-Design */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Roboto:wght@300;400;700&display=swap');
 
 :root {
-  /* Farbvariablen für einfaches Anpassen */
-  --color-primary-dark: #1a1a1a;   /* Sehr dunkles Schwarz / Anthrazit */
-  --color-secondary-dark: #2a2a2a; /* Etwas helleres Schwarz für Elemente */
-  --color-text-light: #f0f0f0;    /* Helles Grau für Text */
-  --color-accent-gold: #ffcc00;   /* Kräftiges Gold */
-  --color-accent-gold-hover: #e6b800; /* Dunkleres Gold für Hover-Effekte */
-  --color-border-dark: #444;      /* Dunkler Rand */
-  --color-error: #dc3545;         /* Rot für Fehlermeldungen */
-  --color-error-bg: #4a1c21;      /* Dunkler Rot-Hintergrund */
-  --color-success: #28a745;       /* Grün für Erfolgsmeldungen */
-  --color-success-bg: #1c4a22;    /* Dunkler Grün-Hintergrund */
-  --color-info: #007bff;          /* Blau für allgemeine Infos/Links */
-  --color-info-hover: #0056b3;
-  --color-pending-status: #8a6d00; /* Spezifisches Gold/Braun für "Pending" */
-  --color-completed-status: #0d0d0d; /* Dunkler für "Completed" */
+  /* Farbvariablen */
+  --color-primary-bg: #0a0a0a;     /* Tiefes Schwarz für den Body-Hintergrund */
+  --color-card-bg: #1a1a1a;        /* Etwas helleres Schwarz für Karten/Container */
+  --color-section-bg: #141414;     /* Noch dunkler für Sektionshintergrund */
+  --color-border-dark: #2a2a2a;    /* Dunkle Rahmen */
+  --color-border-accent: #3a3a3a;  /* Akzentuiertere Rahmen */
+  --color-text-light: #ececec;    /* Sehr helles Grau für Haupttext */
+  --color-text-muted: #999999;     /* Gedämpftes Grau für Sekundärtext */
+  --color-gold-main: #ffcc00;      /* Primäres Gold */
+  --color-gold-hover: #e0b300;     /* Dunkleres Gold für Hover */
+  --color-gold-gradient-start: #ffcc00;
+  --color-gold-gradient-end: #ffa300; /* Orange-lastigeres Gold für Verläufe */
+  --color-button-secondary-hover: #333333; /* Hover für sekundäre Buttons */
+
+  /* Statusfarben */
+  --status-pending: #b8860b;      /* Gold/Bronze für Pending */
+  --status-approved: #28a745;     /* Helles Grün für Approved */
+  --status-completed: #4a4a4a;    /* Dunkles Grau für Completed */
+  --status-rejected: #dc3545;     /* Rot für Rejected (falls implementiert) */
+
+  /* Schatteneffekte */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 10px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 25px rgba(0,0,0,0.7);
+
+  /* Übergangszeiten */
+  --transition-fast: 0.2s ease-out;
+  --transition-medium: 0.3s ease-out;
+  --transition-slow: 0.4s ease-out;
+
+  /* Radius */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+}
+
+/* Globales Reset und Basistypen */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: var(--color-primary-dark);
+  font-family: 'Roboto', sans-serif; /* Hauptschriftart für Body */
+  background-color: var(--color-primary-bg);
   color: var(--color-text-light);
   line-height: 1.6;
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
-  /* Optional: Hintergrundbild, falls du eines hinzufügen möchtest. */
-  /* Du müsstest eine Datei namens rockford_background.png im public-Ordner deines Projekts ablegen. */
-  /* background-image: url('/rockford_background.png'); */
+  align-items: flex-start; /* Oben ausgerichtet, damit Scrollen bei viel Inhalt funktioniert */
+  padding: 20px;
+  overflow-x: hidden; /* Verhindert horizontale Scrollbalken */
+}
+
+/* Optional: Hintergrundbild, wenn vorhanden */
+/* body {
+  background-image: url('/rockford_background.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-}
+  background-repeat: no-repeat;
+} */
 
 h1, h2, h3, h4, h5, h6 {
-  color: var(--color-accent-gold);
-  margin-top: 0;
-  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif; /* Akzentschriftart für Überschriften */
+  color: var(--color-gold-main);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px; /* Mehr Spacing für Präsenz */
+  font-weight: 700;
+  margin-bottom: 0.8em; /* Etwas angepassterer Abstand */
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.2); /* Dezenter Gold-Leuchteffekt */
 }
+
+h1 { font-size: 3.2em; }
+h2 { font-size: 2.5em; }
+h3 { font-size: 1.8em; }
+h4 { font-size: 1.4em; }
 
 p {
-  color: var(--color-text-light);
-  margin-bottom: 15px;
+  font-size: 1em;
+  color: var(--color-text-muted); /* Gedämpfterer Text für Absätze */
+  margin-bottom: 1em;
 }
 
-/* Allgemeine Container für Seiteninhalte */
-.container {
-  max-width: 700px;
-  width: 90%;
-  margin: 40px auto;
-  padding: 30px;
-  border: 1px solid var(--color-border-dark);
-  border-radius: 10px;
-  background-color: var(--color-secondary-dark);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-  text-align: center; /* Standardzentrierung, kann in spezifischen Containern überschrieben werden */
+strong {
+  color: var(--color-text-light); /* Fette Texte bleiben hell */
 }
+
+/* Allgemeine Container-Stile */
+.container {
+  width: 100%;
+  max-width: 960px; /* Noch breiter für professionellen Look */
+  margin: 40px auto;
+  padding: 50px; /* Mehr Innenabstand */
+  background-color: var(--color-card-bg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-border-dark);
+  animation: fadeIn var(--transition-slow) forwards; /* Sanfter Fade-In */
+}
+
+/* Goldene Akzentlinie oben am Container */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px; /* Deutlicher */
+  background: linear-gradient(to right, var(--color-gold-gradient-start), var(--color-gold-gradient-end), transparent);
+  border-top-left-radius: var(--border-radius-lg);
+  border-top-right-radius: var(--border-radius-lg);
+}
+
+/* Animation für Fade-In */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 
 /* Formular-Elemente */
 form {
-  text-align: left; /* Formularinhalte linksbündig */
+  text-align: left;
 }
 
 form div {
-  margin-bottom: 20px;
+  margin-bottom: 28px; /* Mehr Abstand */
 }
 
 label {
+  font-family: 'Montserrat', sans-serif;
   display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
+  margin-bottom: 10px;
+  font-weight: 600; /* Kräftiger */
   color: var(--color-text-light);
   font-size: 0.95em;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
 }
 
 input[type="email"],
@@ -87,15 +159,13 @@ input[type="number"],
 textarea,
 select {
   width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 5px;
-  border: 1px solid var(--color-border-dark);
-  border-radius: 5px;
-  box-sizing: border-box;
-  font-size: 1em;
-  background-color: var(--color-primary-dark);
+  padding: 15px 20px; /* Mehr Padding */
+  border: 1px solid var(--color-border-accent); /* Etwas akzentuierterer Rand */
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-primary-bg); /* Dunklerer Input-Hintergrund */
   color: var(--color-text-light);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 1.05em;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 input[type="email"]:focus,
@@ -104,249 +174,304 @@ input[type="text"]:focus,
 input[type="number"]:focus,
 textarea:focus,
 select:focus {
-  border-color: var(--color-accent-gold);
-  box-shadow: 0 0 0 2px rgba(255, 204, 0, 0.3);
+  border-color: var(--color-gold-main);
+  box-shadow: 0 0 0 4px rgba(255, 204, 0, 0.3); /* Deutlicherer Goldschatten */
   outline: none;
 }
 
-/* Spezieller Stil für Dateiupload-Input */
+/* Dateiupload-Input */
 input[type="file"] {
-  padding: 10px;
-  border: 1px dashed var(--color-border-dark);
-  background-color: var(--color-primary-dark);
-  color: var(--color-text-light);
+  padding: 15px;
+  border: 2px dashed var(--color-border-accent); /* Deutlicher gestrichelt */
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-primary-bg);
   cursor: pointer;
 }
 input[type="file"]::file-selector-button {
-  background-color: var(--color-accent-gold);
-  color: var(--color-primary-dark);
+  background: linear-gradient(to right, var(--color-gold-gradient-start), var(--color-gold-gradient-end));
+  color: var(--color-primary-bg); /* Dunkler Text auf Gold-Button */
   border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
+  padding: 10px 20px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
   margin-right: 15px;
-  transition: background-color 0.2s ease;
+  transition: opacity var(--transition-fast), transform 0.1s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm);
 }
 input[type="file"]::file-selector-button:hover {
-  background-color: var(--color-accent-gold-hover);
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 
 /* Buttons */
 button {
-  background-color: var(--color-accent-gold);
-  color: var(--color-primary-dark);
-  padding: 12px 25px;
+  background: linear-gradient(to right, var(--color-gold-gradient-start), var(--color-gold-gradient-end));
+  color: var(--color-primary-bg);
+  padding: 16px 35px; /* Größere Buttons */
   border: none;
-  border-radius: 5px;
+  border-radius: var(--border-radius-md);
   cursor: pointer;
-  font-size: 1.05em;
-  font-weight: bold;
+  font-size: 1.15em; /* Größerer Font */
+  font-weight: 700; /* Kräftiger */
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  margin-right: 10px; /* Abstand zwischen Buttons */
+  letter-spacing: 1px;
+  transition: all var(--transition-medium);
+  margin-right: 18px; /* Mehr Abstand */
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0; /* Verhindert Schrumpfen in Flex-Containern */
 }
 
 button:hover {
-  background-color: var(--color-accent-gold-hover);
-  transform: translateY(-2px);
+  opacity: 0.9; /* Leichter Opacity-Effekt */
+  transform: translateY(-4px); /* Deutlicherer Hoch-Effekt */
+  box-shadow: var(--shadow-lg);
 }
 
 button:disabled {
-  background-color: var(--color-border-dark);
-  color: var(--color-text-light);
+  background: var(--color-border-dark); /* Gedämpfter bei Disabled */
+  color: var(--color-text-muted);
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
+  opacity: 0.8;
 }
 
 /* Sekundärer Button-Stil (z.B. für "Abbrechen") */
 button[type="button"] {
   background-color: var(--color-secondary-dark);
-  color: var(--color-accent-gold);
-  border: 1px solid var(--color-accent-gold);
+  color: var(--color-gold-main);
+  border: 1px solid var(--color-gold-main);
+  box-shadow: var(--shadow-sm);
 }
 
 button[type="button"]:hover {
-  background-color: var(--color-border-dark);
-  color: var(--color-accent-gold-hover);
+  background-color: var(--color-button-secondary-hover);
+  color: var(--color-gold-hover);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 
 /* Nachrichten (Fehler/Erfolg) */
+.error-message, .success-message {
+  padding: 18px;
+  border-radius: var(--border-radius-md);
+  margin-top: 25px;
+  margin-bottom: 30px;
+  font-size: 1.05em;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
 .error-message {
   color: var(--color-error);
   background-color: var(--color-error-bg);
   border: 1px solid var(--color-error);
-  padding: 12px;
-  border-radius: 5px;
-  margin-top: 15px;
-  margin-bottom: 20px;
-  font-size: 0.9em;
-  text-align: center;
 }
-
 .success-message {
   color: var(--color-success);
   background-color: var(--color-success-bg);
   border: 1px solid var(--color-success);
-  padding: 12px;
-  border-radius: 5px;
-  margin-top: 15px;
-  margin-bottom: 20px;
-  font-size: 0.9em;
-  text-align: center;
 }
 
 /* Links */
 a {
-  color: var(--color-accent-gold);
+  color: var(--color-gold-main);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
 }
 
 a:hover {
-  color: var(--color-accent-gold-hover);
+  color: var(--color-gold-hover);
   text-decoration: underline;
 }
 
-/* Navigation (generisch für alle Nav-Balken) */
+/* Generische Navigation (für alle Nav-Balken oben auf Seiten) */
 nav {
-  margin-bottom: 30px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--color-border-dark);
-  text-align: left; /* Standard für Navigation, kann spezifisch überschrieben werden */
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  text-align: left;
 }
 
 nav a {
-  margin-right: 25px;
-  font-size: 1.1em;
-  font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
+  margin-right: 35px; /* Mehr Abstand */
+  font-size: 1.2em; /* Größer */
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 1.2px;
+  transition: all var(--transition-fast);
 }
-
 nav a:last-child {
   margin-right: 0;
+}
+nav a:hover {
+    color: var(--color-gold-hover);
+    text-decoration: none; /* Kein Unterstrich bei Hover auf Navigation */
+    transform: translateY(-2px);
 }
 
 
 /* Dashboard spezifische Stile */
 .dashboard-container {
+  padding: 60px; /* Noch mehr Innenabstand für Luxus-Gefühl */
   text-align: center;
-  padding: 40px;
 }
 
 .dashboard-title {
-  font-size: 2.5em;
-  margin-bottom: 10px;
+  font-size: 3.8em; /* Massiver Titel */
+  margin-bottom: 20px;
+  letter-spacing: 3px;
+  line-height: 1.1;
+  text-shadow: 0 0 15px rgba(255, 204, 0, 0.4); /* Stärkerer Leuchteffekt */
 }
 
 .welcome-message {
-  font-size: 1.1em;
+  font-size: 1.3em;
   color: var(--color-text-light);
-  margin-bottom: 30px;
+  margin-bottom: 50px; /* Mehr Abstand */
+  font-weight: 400;
 }
 
 .admin-status {
-  font-size: 1.1em;
-  color: var(--color-accent-gold);
+  font-size: 1.3em;
+  color: var(--color-gold-main);
   font-weight: bold;
-  margin-top: -15px;
-  margin-bottom: 30px;
+  margin-top: -25px; /* Noch näher am Titel */
+  margin-bottom: 50px;
   text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.3);
+}
+
+.dashboard-sections-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px; /* Größerer Abstand zwischen Sektionen */
+  justify-content: center;
+  align-items: stretch; /* Sektionen gleiche Höhe haben lassen */
+  margin-top: 40px;
 }
 
 .dashboard-section {
-  background-color: var(--color-primary-dark);
-  border: 1px solid var(--color-border-dark);
-  border-radius: 8px;
-  padding: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  flex: 1;
+  min-width: 320px; /* Etwas größere Mindestbreite */
+  max-width: 48%; /* Bleibt bei 2 Spalten auf breiten Bildschirmen */
+  background-color: var(--color-section-bg); /* Dunkler als Haupt-Container */
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--border-radius-lg);
+  padding: 35px; /* Mehr Padding */
+  box-shadow: var(--shadow-strong); /* Stärkerer Schatten */
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  display: flex; /* Für interne Ausrichtung */
+  flex-direction: column;
+}
+
+.dashboard-section:hover {
+    transform: translateY(-7px); /* Deutlicherer Schwebeeffekt */
+    box-shadow: 0 12px 30px rgba(0,0,0,0.8); /* Noch stärkerer Schatten beim Hover */
+}
+
+.dashboard-section::before {
+  height: 4px; /* Dünne Goldlinie oben */
+  background: linear-gradient(to right, var(--color-gold-main), var(--color-gold-hover), transparent);
 }
 
 .dashboard-section h3 {
-  color: var(--color-accent-gold);
-  margin-bottom: 25px;
-  font-size: 1.6em;
-  border-bottom: 1px solid var(--color-border-dark);
-  padding-bottom: 15px;
+  color: var(--color-gold-main);
+  margin-bottom: 30px; /* Mehr Abstand zum Inhalt */
+  font-size: 2em; /* Größerer Sektions-Titel */
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 18px;
+  letter-spacing: 1.5px;
 }
 
 .dashboard-nav {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  flex-direction: column; /* Links untereinander */
+  gap: 20px; /* Abstand zwischen Links */
+  margin-top: auto; /* Push links zum unteren Rand der Sektion, wenn nötig */
 }
 
 .nav-item {
-  background-color: var(--color-secondary-dark);
-  color: var(--color-accent-gold);
-  padding: 15px 30px;
-  border: 1px solid var(--color-accent-gold);
-  border-radius: 8px;
+  background-color: var(--color-primary-bg); /* Dunklerer Hintergrund für Nav-Items */
+  color: var(--color-gold-main);
+  padding: 18px 30px;
+  border: 1px solid var(--color-gold-main);
+  border-radius: var(--border-radius-md);
   text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
-  flex-basis: 280px;
-  max-width: 100%;
+  font-weight: 600;
+  transition: all var(--transition-medium);
   display: flex;
   justify-content: center;
   align-items: center;
-  text-transform: uppercase; /* Auch hier, passt zum Rest */
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  box-shadow: var(--shadow-sm);
 }
 
 .nav-item:hover {
-  background-color: var(--color-accent-gold);
-  color: var(--color-primary-dark);
+  background: linear-gradient(to right, var(--color-gold-gradient-start), var(--color-gold-gradient-end));
+  color: var(--color-primary-bg);
   text-decoration: none;
-  transform: translateY(-3px);
+  transform: scale(1.02); /* Leichter Vergrößerungseffekt */
+  box-shadow: var(--shadow-md);
 }
 
 .admin-section {
-  border-color: var(--color-accent-gold);
-  background-color: var(--color-completed-status); /* Noch dunklerer Hintergrund für Admin */
+  border-color: var(--color-gold-hover); /* Goldener Rand für Admin-Bereich */
+  background-color: #0c0c0c; /* Noch dunklerer, fast schwarzer Hintergrund für Admin */
+}
+.admin-section::before {
+    background: linear-gradient(to right, var(--color-gold-hover), var(--color-gold-gradient-start), transparent);
 }
 
 .admin-nav-item {
-  border-color: var(--color-accent-gold-hover);
+  border-color: var(--color-gold-hover);
 }
 
 .dashboard-footer {
-  margin-top: 30px;
+  margin-top: 50px; /* Mehr Abstand zum Footer */
+  padding-top: 30px;
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 /* Stile für Vorschlags-Anzeige (all & my proposals) */
 .proposals-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
-  margin-top: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Größere Karten im Raster */
+  gap: 40px; /* Mehr Abstand */
+  margin-top: 40px;
   justify-content: center;
 }
 
 .proposal-card {
-  background-color: var(--color-secondary-dark);
-  border: 1px solid var(--color-border-dark);
-  border-radius: 10px;
+  background-color: var(--color-section-bg); /* Gleich wie Dashboard-Sektionen */
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--border-radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-medium);
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
   text-align: left;
 }
 
 .proposal-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  transform: translateY(-8px); /* Deutlicherer Hoch-Effekt */
+  box-shadow: var(--shadow-lg);
 }
 
 .proposal-image-wrapper {
   width: 100%;
-  height: 200px;
+  height: 240px; /* Noch höhere Bilder */
   overflow: hidden;
   position: relative;
 }
@@ -359,49 +484,57 @@ nav a:last-child {
 }
 
 .proposal-content {
-  padding: 20px;
+  padding: 30px; /* Mehr Padding */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Nimmt verfügbaren Platz ein */
 }
 
 .proposal-content h3 {
-  font-size: 1.4em;
-  margin-bottom: 10px;
-  color: var(--color-accent-gold);
-  border-bottom: none;
-  padding-bottom: 0;
-  text-transform: none;
+  font-size: 1.6em; /* Größer */
+  margin-bottom: 15px;
+  color: var(--color-gold-main);
+  text-transform: none; /* Keine Uppercase hier */
   letter-spacing: normal;
+  line-height: 1.2;
 }
 
 .proposal-content p {
-  font-size: 0.95em;
-  color: var(--color-text-light);
-  margin-bottom: 8px;
+  font-size: 1em;
+  color: var(--color-text-muted); /* Gedämpfterer Text */
+  margin-bottom: 12px;
+}
+
+.proposal-content p strong {
+    color: var(--color-gold-main); /* Label fett und golden */
+    font-weight: 600;
 }
 
 .proposal-status {
   font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 10px 18px; /* Mehr Padding */
+  border-radius: var(--border-radius-sm);
   display: inline-block;
-  margin-top: 15px;
+  margin-top: 20px;
   text-transform: uppercase;
-  font-size: 0.8em;
-  letter-spacing: 0.5px;
+  font-size: 0.9em;
+  letter-spacing: 0.8px;
+  align-self: flex-start; /* Links ausrichten */
 }
 
 /* Statusfarben basierend auf CSS-Variablen */
 .status-pending {
-  background-color: var(--color-pending-status);
-  color: #fff;
+  background-color: var(--status-pending);
+  color: var(--color-primary-bg); /* Dunkler Text auf Pending */
 }
 
 .status-approved {
-  background-color: var(--color-success);
+  background-color: var(--status-approved);
   color: #fff;
 }
 
 .status-completed {
-  background-color: var(--color-completed-status);
+  background-color: var(--status-completed);
   color: var(--color-text-light);
   border: 1px solid var(--color-border-dark);
 }

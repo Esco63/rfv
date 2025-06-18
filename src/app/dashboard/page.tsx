@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { supabase } from '../../lib/supabase';
 import { User } from '@supabase/supabase-js';
 
-// Typdefinition für Profil (falls noch nicht global definiert)
+// Typdefinition für Profil
 interface UserProfile {
   id: string;
   username: string;
@@ -27,16 +27,15 @@ export default function DashboardPage() {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
-        router.push('/login'); // Keine Session, zur Login-Seite umleiten
+        router.push('/login');
         return;
       }
 
       setUser(user);
 
-      // Profil abrufen, um Benutzername und Admin-Status zu erhalten
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('*') // Alle Profil-Daten abrufen
+        .select('*')
         .eq('id', user.id)
         .single();
 
@@ -62,7 +61,7 @@ export default function DashboardPage() {
           router.push('/login');
         } else if (event === 'SIGNED_IN') {
           setUser(session?.user || null);
-          checkUserAndProfile(); // Profil neu laden bei Anmeldung
+          checkUserAndProfile();
         }
       }
     );
@@ -94,35 +93,37 @@ export default function DashboardPage() {
       <p className="welcome-message">Dein Zugang zum RockfordV-Wirtschaftspanel.</p>
       {userProfile?.is_admin && <p className="admin-status">(Du bist ein Administrator)</p>}
 
-      <div className="dashboard-section">
-        <h3>Community-Aktionen</h3>
-        <nav className="dashboard-nav">
-          <Link href="/proposals/new" className="nav-item">
-            Neuen Vorschlag einreichen
-          </Link>
-          <Link href="/proposals/my" className="nav-item">
-            Meine Vorschläge ansehen
-          </Link>
-          <Link href="/proposals/all" className="nav-item">
-            Alle Vorschläge ansehen
-          </Link>
-        </nav>
-      </div>
-
-      {userProfile?.is_admin && (
-        <div className="dashboard-section admin-section">
-          <h3>Admin-Bereich</h3>
+      {/* WRAPPER FÜR SEKTIONEN - Wichtig für nebeneinander Layout */}
+      <div className="dashboard-sections-wrapper">
+        <div className="dashboard-section community-section">
+          <h3>Community-Aktionen</h3>
           <nav className="dashboard-nav">
-            <Link href="/admin/proposals/review" className="nav-item admin-nav-item">
-              Vorschläge zur Überprüfung
+            <Link href="/proposals/new" className="nav-item">
+              Neuen Vorschlag einreichen
             </Link>
-            <Link href="/admin/users" className="nav-item admin-nav-item">
-              Benutzer verwalten
+            <Link href="/proposals/my" className="nav-item">
+              Meine Vorschläge ansehen
             </Link>
-            {/* Weitere Admin-Links hier */}
+            <Link href="/proposals/all" className="nav-item">
+              Alle Vorschläge ansehen
+            </Link>
           </nav>
         </div>
-      )}
+
+        {userProfile?.is_admin && (
+          <div className="dashboard-section admin-section">
+            <h3>Admin-Bereich</h3>
+            <nav className="dashboard-nav">
+              <Link href="/admin/proposals/review" className="nav-item admin-nav-item">
+                Vorschläge zur Überprüfung
+              </Link>
+              <Link href="/admin/users" className="nav-item admin-nav-item">
+                Benutzer verwalten
+              </Link>
+            </nav>
+          </div>
+        )}
+      </div> {/* ENDE WRAPPER */}
 
       <div className="dashboard-footer">
         <button onClick={handleLogout} disabled={loading}>
