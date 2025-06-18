@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '../../lib/supabase';
+import { User } from '@supabase/supabase-js'; // Importieren für den Typ User
 
 export default function RegisterPage() {
   const [email, setEmail] = useState<string>('');
@@ -12,7 +13,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState<string>(''); // Neuer State für Benutzername
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>(''); // Für Erfolgsmeldungen
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const router = useRouter();
 
@@ -22,7 +23,6 @@ export default function RegisterPage() {
     setError('');
     setSuccessMessage('');
 
-    // Prüfen, ob der Benutzername leer ist
     if (!username.trim()) {
       setError('Bitte gib einen Benutzernamen ein.');
       setLoading(false);
@@ -30,7 +30,7 @@ export default function RegisterPage() {
     }
 
     // 1. Benutzer bei Supabase Auth registrieren
-    const { data, error: signUpError } = await supabase.auth.signUp({
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -41,37 +41,33 @@ export default function RegisterPage() {
       return;
     }
 
-    const newUser = data.user;
+    const newUser = signUpData.user;
 
     if (newUser) {
-      // 2. Benutzername in die profiles-Tabelle eintragen
-      // Hier nutzen wir die von uns erstellte RLS-Policy "Users can create their own profile"
-      const { error: profileError } = await supabase
+      // 2. Das vom Trigger ERSTELLTE Profil mit dem gewählten Benutzernamen AKTUALISIEREN
+      // Hier nutzen wir die RLS-Policy "Users can update their own profile"
+      const { error: profileUpdateError } = await supabase
         .from('profiles')
-        .insert({
-          id: newUser.id, // Die ID des gerade registrierten Benutzers
-          username: username.trim(),
-        });
+        .update({ username: username.trim() }) // Hier aktualisieren wir den Benutzernamen
+        .eq('id', newUser.id); // Aktualisiere das Profil des neu registrierten Benutzers
 
-      if (profileError) {
-        // Falls der Benutzername schon existiert oder ein anderer Profilfehler auftritt
-        // Wichtig: Supabase Auth-Konto wurde bereits erstellt, müsste man bei einem echten Projekt behandeln
-        // z.B. auth.admin.deleteUser(newUser.id) oder Benutzer auffordern, den Nutzernamen zu ändern
-        setError(`Fehler beim Speichern des Benutzernamens: ${profileError.message}. Versuche einen anderen Benutzernamen.`);
-        // Optional: Den eben erstellten Auth-Nutzer löschen, falls Profilerstellung fehlschlägt
-        await supabase.auth.admin.deleteUser(newUser.id); // ACHTUNG: Admin-Rechte nur im Backend nutzen! Hier nur zu Testzwecken oder für API Route.
-                                                        // Für Frontend müsste man den Fehler anders abfangen oder diesen Schritt auslagern.
+      if (profileUpdateError) {
+        console.error("Fehler beim Aktualisieren des Benutzernamens:", profileUpdateError.message);
+        // Wenn der Benutzername bereits vergeben ist (UNIQUE-Constraint)
+        if (profileUpdateError.code === '23505') { // PostgreSQL Unique Violation Error Code
+            setError(`Dieser Benutzername "${username.trim()}" ist bereits vergeben. Bitte wähle einen anderen.`);
+        } else {
+            setError(`Fehler beim Speichern des Benutzernamens: ${profileUpdateError.message}.`);
+        }
         setLoading(false);
         return;
       }
 
-      setSuccessMessage('Registrierung erfolgreich! Bitte überprüfe deine E-Mails zur Bestätigung. Du wirst danach zur Login-Seite weitergeleitet.');
-      // Nach kurzer Zeit zur Login-Seite weiterleiten
+      setSuccessMessage('Registrierung erfolgreich! Bitte überprüfe deine E-Mails zur Bestätigung (falls aktiviert). Du wirst gleich zur Login-Seite weitergeleitet.');
       setTimeout(() => {
         router.push('/login');
-      }, 3000); // 3 Sekunden Wartezeit
+      }, 4000); // 4 Sekunden Wartezeit, um die Nachricht zu lesen
     } else {
-        // Sollte nicht passieren, da signUpError gehandhabt wird
         setError('Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.');
     }
     setLoading(false);
