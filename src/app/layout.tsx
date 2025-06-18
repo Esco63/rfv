@@ -1,9 +1,9 @@
 // src/app/layout.tsx
-import './globals.css'; // Importiere deine globalen Styles
+import '../globals.css'; // Importiere deine globalen Styles
 
 export const metadata = {
-  title: 'Community Panel',
-  description: 'Your community\'s economy suggestion panel.',
+  title: 'Community Panel - RockfordV',
+  description: 'Your community\'s economy suggestion panel for RockfordV.',
 };
 
 export default function RootLayout({

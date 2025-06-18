@@ -1,4 +1,4 @@
-/* src/app/globals.css - RockfordV Schwarz & Gold Theme - Ultimatives Profi-Design */
+/* src/app/globals.css - RockfordV Schwarz & Gold Theme - Ultimatives Profi-Design mit Sidebar */
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Roboto:wght@300;400;700&display=swap');
 
@@ -7,6 +7,7 @@
   --color-primary-bg: #0a0a0a;     /* Tiefes Schwarz für den Body-Hintergrund */
   --color-card-bg: #1a1a1a;        /* Etwas helleres Schwarz für Karten/Container */
   --color-section-bg: #141414;     /* Noch dunkler für Sektionshintergrund */
+  --color-sidebar-bg: #111111;     /* Spezifisches Dunkel für Sidebar */
   --color-border-dark: #2a2a2a;    /* Dunkle Rahmen */
   --color-border-accent: #3a3a3a;  /* Akzentuiertere Rahmen */
   --color-text-light: #ececec;    /* Sehr helles Grau für Haupttext */
@@ -16,6 +17,9 @@
   --color-gold-gradient-start: #ffcc00;
   --color-gold-gradient-end: #ffa300; /* Orange-lastigeres Gold für Verläufe */
   --color-button-secondary-hover: #333333; /* Hover für sekundäre Buttons */
+  --color-sidebar-item-hover: #222222; /* Hintergrundfarbe für Sidebar-Item Hover */
+  --color-sidebar-item-active: #000000; /* Hintergrundfarbe für aktiven Sidebar-Item */
+
 
   /* Statusfarben */
   --status-pending: #b8860b;      /* Gold/Bronze für Pending */
@@ -27,6 +31,8 @@
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
   --shadow-md: 0 4px 10px rgba(0,0,0,0.5);
   --shadow-lg: 0 8px 25px rgba(0,0,0,0.7);
+  --shadow-sidebar: 6px 0 15px rgba(0,0,0,0.6); /* Schatten für Sidebar */
+
 
   /* Übergangszeiten */
   --transition-fast: 0.2s ease-out;
@@ -51,16 +57,14 @@ html {
 }
 
 body {
-  font-family: 'Roboto', sans-serif; /* Hauptschriftart für Body */
+  font-family: 'Roboto', sans-serif;
   background-color: var(--color-primary-bg);
   color: var(--color-text-light);
   line-height: 1.6;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Oben ausgerichtet, damit Scrollen bei viel Inhalt funktioniert */
-  padding: 20px;
-  overflow-x: hidden; /* Verhindert horizontale Scrollbalken */
+  padding: 0; /* Kein globales Padding, wird vom app-layout behandelt */
+  overflow-x: hidden;
+  display: block; /* Entfernt Flex von body für das App-Layout */
 }
 
 /* Optional: Hintergrundbild, wenn vorhanden */
@@ -73,13 +77,13 @@ body {
 } */
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif; /* Akzentschriftart für Überschriften */
+  font-family: 'Montserrat', sans-serif;
   color: var(--color-gold-main);
   text-transform: uppercase;
-  letter-spacing: 2px; /* Mehr Spacing für Präsenz */
+  letter-spacing: 2px;
   font-weight: 700;
-  margin-bottom: 0.8em; /* Etwas angepassterer Abstand */
-  text-shadow: 0 0 8px rgba(255, 204, 0, 0.2); /* Dezenter Gold-Leuchteffekt */
+  margin-bottom: 0.8em;
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.2);
 }
 
 h1 { font-size: 3.2em; }
@@ -89,37 +93,43 @@ h4 { font-size: 1.4em; }
 
 p {
   font-size: 1em;
-  color: var(--color-text-muted); /* Gedämpfterer Text für Absätze */
+  color: var(--color-text-muted);
   margin-bottom: 1em;
 }
 
 strong {
-  color: var(--color-text-light); /* Fette Texte bleiben hell */
+  color: var(--color-text-light);
 }
 
-/* Allgemeine Container-Stile */
+/* Allgemeine Container-Stile (für Login/Register/Homepage) */
 .container {
   width: 100%;
-  max-width: 960px; /* Noch breiter für professionellen Look */
+  max-width: 600px; /* Kleinerer Container für Login/Register */
   margin: 40px auto;
-  padding: 50px; /* Mehr Innenabstand */
+  padding: 50px;
   background-color: var(--color-card-bg);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   position: relative;
   overflow: hidden;
   border: 1px solid var(--color-border-dark);
-  animation: fadeIn var(--transition-slow) forwards; /* Sanfter Fade-In */
+  animation: fadeIn var(--transition-slow) forwards;
+  display: flex; /* Für zentrierte Inhalte in Login/Register */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px); /* Damit es auch auf Seiten wie Login zentriert ist */
+  text-align: center;
 }
 
-/* Goldene Akzentlinie oben am Container */
+/* ::before Element für einen subtilen goldenen Rahmen oder Effekt */
 .container::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 6px; /* Deutlicher */
+  height: 6px;
   background: linear-gradient(to right, var(--color-gold-gradient-start), var(--color-gold-gradient-end), transparent);
   border-top-left-radius: var(--border-radius-lg);
   border-top-right-radius: var(--border-radius-lg);
@@ -134,18 +144,19 @@ strong {
 
 /* Formular-Elemente */
 form {
+  width: 100%; /* Formular nimmt volle Breite des Containers ein */
   text-align: left;
 }
 
 form div {
-  margin-bottom: 28px; /* Mehr Abstand */
+  margin-bottom: 28px;
 }
 
 label {
   font-family: 'Montserrat', sans-serif;
   display: block;
   margin-bottom: 10px;
-  font-weight: 600; /* Kräftiger */
+  font-weight: 600;
   color: var(--color-text-light);
   font-size: 0.95em;
   letter-spacing: 0.8px;
@@ -159,10 +170,10 @@ input[type="number"],
 textarea,
 select {
   width: 100%;
-  padding: 15px 20px; /* Mehr Padding */
-  border: 1px solid var(--color-border-accent); /* Etwas akzentuierterer Rand */
+  padding: 15px 20px;
+  border: 1px solid var(--color-border-accent);
   border-radius: var(--border-radius-md);
-  background-color: var(--color-primary-bg); /* Dunklerer Input-Hintergrund */
+  background-color: var(--color-primary-bg);
   color: var(--color-text-light);
   font-size: 1.05em;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
@@ -175,21 +186,21 @@ input[type="number"]:focus,
 textarea:focus,
 select:focus {
   border-color: var(--color-gold-main);
-  box-shadow: 0 0 0 4px rgba(255, 204, 0, 0.3); /* Deutlicherer Goldschatten */
+  box-shadow: 0 0 0 4px rgba(255, 204, 0, 0.3);
   outline: none;
 }
 
 /* Dateiupload-Input */
 input[type="file"] {
   padding: 15px;
-  border: 2px dashed var(--color-border-accent); /* Deutlicher gestrichelt */
+  border: 2px dashed var(--color-border-accent);
   border-radius: var(--border-radius-md);
   background-color: var(--color-primary-bg);
   cursor: pointer;
 }
 input[type="file"]::file-selector-button {
   background: linear-gradient(to right, var(--color-gold-gradient-start), var(--color-gold-gradient-end));
-  color: var(--color-primary-bg); /* Dunkler Text auf Gold-Button */
+  color: var(--color-primary-bg);
   border: none;
   padding: 10px 20px;
   border-radius: var(--border-radius-sm);
@@ -207,32 +218,32 @@ input[type="file"]::file-selector-button:hover {
 }
 
 
-/* Buttons */
+/* Buttons (General) */
 button {
   background: linear-gradient(to right, var(--color-gold-gradient-start), var(--color-gold-gradient-end));
   color: var(--color-primary-bg);
-  padding: 16px 35px; /* Größere Buttons */
+  padding: 16px 35px;
   border: none;
   border-radius: var(--border-radius-md);
   cursor: pointer;
-  font-size: 1.15em; /* Größerer Font */
-  font-weight: 700; /* Kräftiger */
+  font-size: 1.15em;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: all var(--transition-medium);
-  margin-right: 18px; /* Mehr Abstand */
+  margin-right: 18px;
   box-shadow: var(--shadow-md);
-  flex-shrink: 0; /* Verhindert Schrumpfen in Flex-Containern */
+  flex-shrink: 0;
 }
 
 button:hover {
-  opacity: 0.9; /* Leichter Opacity-Effekt */
-  transform: translateY(-4px); /* Deutlicherer Hoch-Effekt */
+  opacity: 0.9;
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
 }
 
 button:disabled {
-  background: var(--color-border-dark); /* Gedämpfter bei Disabled */
+  background: var(--color-border-dark);
   color: var(--color-text-muted);
   cursor: not-allowed;
   transform: none;
@@ -278,7 +289,7 @@ button[type="button"]:hover {
   border: 1px solid var(--color-success);
 }
 
-/* Links */
+/* Links (General) */
 a {
   color: var(--color-gold-main);
   text-decoration: none;
@@ -290,251 +301,384 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Generische Navigation (für alle Nav-Balken oben auf Seiten) */
-nav {
+
+/* NEUE HAUPTSTRUKTUR FÜR APP-LAYOUT */
+.app-layout {
+  display: flex; /* Sidebar und Inhalt nebeneinander */
+  min-height: 100vh;
+  width: 100%;
+}
+
+.sidebar {
+  width: 280px; /* Feste Breite für die Sidebar */
+  background-color: var(--color-sidebar-bg);
+  box-shadow: var(--shadow-sidebar);
+  padding: 30px 20px; /* Innenabstand */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Header/Nav oben, Footer unten */
+  border-right: 1px solid var(--color-border-dark);
+  position: sticky; /* Sidebar bleibt beim Scrollen an Ort und Stelle */
+  top: 0;
+  height: 100vh; /* Volle Höhe */
+  overflow-y: auto; /* Erlaubt Scrollen, wenn Nav-Items viele sind */
+  z-index: 1000; /* Sicherstellen, dass sie über dem Inhalt liegt */
+}
+
+.sidebar-header {
+  text-align: center;
   margin-bottom: 40px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--color-border-subtle);
-  text-align: left;
 }
 
-nav a {
+.sidebar-title {
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  letter-spacing: 1.5px;
+}
+
+.sidebar-welcome {
+  font-size: 0.9em;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.sidebar-username {
+  color: var(--color-gold-main);
+  font-weight: bold;
+  font-size: 1.1em;
+  display: block; /* Damit der Name in einer neuen Zeile steht */
+  margin-top: 5px;
+}
+
+.admin-badge {
+  background-color: var(--color-gold-main);
+  color: var(--color-primary-bg);
+  padding: 4px 10px;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-top: 10px;
+  display: inline-block;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-nav {
+  flex-grow: 1; /* Nimmt den restlichen Platz ein */
+}
+
+.sidebar-section-title {
   font-family: 'Montserrat', sans-serif;
-  margin-right: 35px; /* Mehr Abstand */
-  font-size: 1.2em; /* Größer */
+  color: var(--color-text-light);
+  font-size: 0.9em;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1.2px;
+  letter-spacing: 1px;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  padding-left: 10px;
+  border-left: 3px solid var(--color-gold-main); /* Goldene Linie als Akzent */
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+  color: var(--color-text-light);
+  text-decoration: none;
+  border-radius: var(--border-radius-sm);
+  margin-bottom: 8px;
   transition: all var(--transition-fast);
-}
-nav a:last-child {
-  margin-right: 0;
-}
-nav a:hover {
-    color: var(--color-gold-hover);
-    text-decoration: none; /* Kein Unterstrich bei Hover auf Navigation */
-    transform: translateY(-2px);
+  font-size: 1em;
+  font-weight: 400;
+  letter-spacing: 0.2px;
 }
 
+.sidebar-nav-item:hover {
+  background-color: var(--color-sidebar-item-hover);
+  color: var(--color-gold-main);
+  transform: translateX(5px); /* Leichter Verschiebeeffekt */
+  text-decoration: none;
+}
 
-/* Dashboard spezifische Stile */
-.dashboard-container {
-  padding: 60px; /* Noch mehr Innenabstand für Luxus-Gefühl */
+.sidebar-nav-item.active {
+  background-color: var(--color-sidebar-item-active); /* Aktiver Link ist fast schwarz */
+  color: var(--color-gold-main);
+  font-weight: 600;
+  border-left: 5px solid var(--color-gold-main); /* Deutlicherer Indikator */
+  padding-left: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border-subtle);
   text-align: center;
 }
 
-.dashboard-title {
-  font-size: 3.8em; /* Massiver Titel */
-  margin-bottom: 20px;
-  letter-spacing: 3px;
-  line-height: 1.1;
-  text-shadow: 0 0 15px rgba(255, 204, 0, 0.4); /* Stärkerer Leuchteffekt */
+.sidebar-logout-button {
+  width: 100%;
+  padding: 12px 0;
+  font-size: 1em;
+  border-radius: var(--border-radius-sm);
+  /* Verwendet die Standard-Button-Stile */
 }
 
-.welcome-message {
-  font-size: 1.3em;
+.app-content {
+  flex-grow: 1; /* Nimmt den restlichen Platz ein */
+  padding: 40px; /* Innenabstand für den Hauptinhalt */
+  overflow-y: auto; /* Erlaubt Scrollen des Hauptinhalts */
+}
+
+/* Ladeanzeige für die gesamte Seite */
+.full-page-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-primary-bg);
   color: var(--color-text-light);
-  margin-bottom: 50px; /* Mehr Abstand */
-  font-weight: 400;
-}
-
-.admin-status {
-  font-size: 1.3em;
-  color: var(--color-gold-main);
+  font-size: 1.5em;
   font-weight: bold;
-  margin-top: -25px; /* Noch näher am Titel */
-  margin-bottom: 50px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  text-shadow: 0 0 8px rgba(255, 204, 0, 0.3);
+  letter-spacing: 1px;
 }
 
+
+/* Spezifische Inhalte innerhalb des App-Contents (z.B. Dashboard-Inhalt) */
+.content-area {
+  max-width: 900px; /* Max-Breite für den Inhalt */
+  margin: 0 auto; /* Zentriert im App-Content */
+  padding: 40px;
+  background-color: var(--color-card-bg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border-dark);
+  text-align: center;
+  position: relative;
+}
+
+.content-area::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(to right, var(--color-gold-gradient-start), var(--color-gold-gradient-end), transparent);
+  border-top-left-radius: var(--border-radius-lg);
+  border-top-right-radius: var(--border-radius-lg);
+}
+
+
+/* Dashboard spezifische Stile (innerhalb .content-area) */
+.dashboard-content .dashboard-title {
+  font-size: 3.5em; /* Etwas kleiner als im Root-Layout, da im Container */
+}
+.dashboard-content .welcome-message {
+    font-size: 1.15em;
+}
+.dashboard-content .admin-status {
+    font-size: 1.15em;
+}
+
+/* Layout für Dashboard-Sektionen (jetzt im .content-area) */
 .dashboard-sections-wrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px; /* Größerer Abstand zwischen Sektionen */
+  gap: 30px; /* Etwas kleinerer Gap */
   justify-content: center;
-  align-items: stretch; /* Sektionen gleiche Höhe haben lassen */
+  align-items: stretch;
   margin-top: 40px;
 }
 
 .dashboard-section {
   flex: 1;
-  min-width: 320px; /* Etwas größere Mindestbreite */
-  max-width: 48%; /* Bleibt bei 2 Spalten auf breiten Bildschirmen */
-  background-color: var(--color-section-bg); /* Dunkler als Haupt-Container */
+  min-width: 300px; /* Angepasste Mindestbreite */
+  max-width: 49%; /* Etwas enger */
+  background-color: var(--color-section-bg);
   border: 1px solid var(--color-border-strong);
-  border-radius: var(--border-radius-lg);
-  padding: 35px; /* Mehr Padding */
-  box-shadow: var(--shadow-strong); /* Stärkerer Schatten */
+  border-radius: var(--border-radius-md); /* Etwas kleinerer Radius */
+  padding: 30px;
+  box-shadow: var(--shadow-medium);
   position: relative;
   overflow: hidden;
   transition: transform var(--transition-medium), box-shadow var(--transition-medium);
-  display: flex; /* Für interne Ausrichtung */
+  display: flex;
   flex-direction: column;
 }
 
 .dashboard-section:hover {
-    transform: translateY(-7px); /* Deutlicherer Schwebeeffekt */
-    box-shadow: 0 12px 30px rgba(0,0,0,0.8); /* Noch stärkerer Schatten beim Hover */
+    transform: translateY(-5px); /* Weniger Verschiebung */
+    box-shadow: var(--shadow-lg);
 }
 
 .dashboard-section::before {
-  height: 4px; /* Dünne Goldlinie oben */
-  background: linear-gradient(to right, var(--color-gold-main), var(--color-gold-hover), transparent);
+  height: 3px; /* Dünner */
 }
 
 .dashboard-section h3 {
-  color: var(--color-gold-main);
-  margin-bottom: 30px; /* Mehr Abstand zum Inhalt */
-  font-size: 2em; /* Größerer Sektions-Titel */
+  font-size: 1.6em; /* Angepasst */
+  margin-bottom: 25px;
+  padding-bottom: 15px;
   border-bottom: 1px solid var(--color-border-subtle);
-  padding-bottom: 18px;
-  letter-spacing: 1.5px;
 }
 
 .dashboard-nav {
   display: flex;
-  flex-direction: column; /* Links untereinander */
-  gap: 20px; /* Abstand zwischen Links */
-  margin-top: auto; /* Push links zum unteren Rand der Sektion, wenn nötig */
+  flex-direction: column;
+  gap: 15px; /* Kleinerer Gap */
+  margin-top: auto;
 }
 
 .nav-item {
-  background-color: var(--color-primary-bg); /* Dunklerer Hintergrund für Nav-Items */
-  color: var(--color-gold-main);
-  padding: 18px 30px;
-  border: 1px solid var(--color-gold-main);
-  border-radius: var(--border-radius-md);
-  text-decoration: none;
-  font-weight: 600;
-  transition: all var(--transition-medium);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  box-shadow: var(--shadow-sm);
-}
-
-.nav-item:hover {
-  background: linear-gradient(to right, var(--color-gold-gradient-start), var(--color-gold-gradient-end));
-  color: var(--color-primary-bg);
-  text-decoration: none;
-  transform: scale(1.02); /* Leichter Vergrößerungseffekt */
-  box-shadow: var(--shadow-md);
+  padding: 15px 25px; /* Angepasstes Padding */
+  font-size: 1em;
 }
 
 .admin-section {
-  border-color: var(--color-gold-hover); /* Goldener Rand für Admin-Bereich */
-  background-color: #0c0c0c; /* Noch dunklerer, fast schwarzer Hintergrund für Admin */
-}
-.admin-section::before {
-    background: linear-gradient(to right, var(--color-gold-hover), var(--color-gold-gradient-start), transparent);
+  background-color: #0d0d0d;
 }
 
-.admin-nav-item {
-  border-color: var(--color-gold-hover);
-}
-
-.dashboard-footer {
-  margin-top: 50px; /* Mehr Abstand zum Footer */
-  padding-top: 30px;
-  border-top: 1px solid var(--color-border-subtle);
-}
-
-/* Stile für Vorschlags-Anzeige (all & my proposals) */
+/* Stile für Vorschlags-Anzeige (all & my proposals) - jetzt auch innerhalb .content-area */
 .proposals-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Größere Karten im Raster */
-  gap: 40px; /* Mehr Abstand */
-  margin-top: 40px;
-  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); /* Angepasste Kartenbreite */
+  gap: 30px;
 }
 
 .proposal-card {
-  background-color: var(--color-section-bg); /* Gleich wie Dashboard-Sektionen */
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-medium);
-  display: flex;
-  flex-direction: column;
-  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
-  text-align: left;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
 }
 
 .proposal-card:hover {
-  transform: translateY(-8px); /* Deutlicherer Hoch-Effekt */
+  transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
 }
 
 .proposal-image-wrapper {
-  width: 100%;
-  height: 240px; /* Noch höhere Bilder */
-  overflow: hidden;
-  position: relative;
-}
-
-.proposal-image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  height: 200px; /* Angepasste Bildhöhe */
 }
 
 .proposal-content {
-  padding: 30px; /* Mehr Padding */
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; /* Nimmt verfügbaren Platz ein */
+  padding: 20px;
 }
 
 .proposal-content h3 {
-  font-size: 1.6em; /* Größer */
-  margin-bottom: 15px;
-  color: var(--color-gold-main);
-  text-transform: none; /* Keine Uppercase hier */
-  letter-spacing: normal;
-  line-height: 1.2;
-}
-
-.proposal-content p {
-  font-size: 1em;
-  color: var(--color-text-muted); /* Gedämpfterer Text */
-  margin-bottom: 12px;
-}
-
-.proposal-content p strong {
-    color: var(--color-gold-main); /* Label fett und golden */
-    font-weight: 600;
+  font-size: 1.4em;
 }
 
 .proposal-status {
-  font-weight: bold;
-  padding: 10px 18px; /* Mehr Padding */
-  border-radius: var(--border-radius-sm);
-  display: inline-block;
-  margin-top: 20px;
-  text-transform: uppercase;
-  font-size: 0.9em;
-  letter-spacing: 0.8px;
-  align-self: flex-start; /* Links ausrichten */
+  padding: 8px 15px;
+  font-size: 0.85em;
 }
 
-/* Statusfarben basierend auf CSS-Variablen */
-.status-pending {
-  background-color: var(--status-pending);
-  color: var(--color-primary-bg); /* Dunkler Text auf Pending */
+
+/* MEDIA QUERIES für Responsivität */
+
+/* Für Tablets (typischerweise 768px bis 1024px) */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 240px; /* Etwas schmalere Sidebar */
+  }
+  .app-content {
+    padding: 30px; /* Weniger Padding im Inhalt */
+  }
+  .dashboard-section {
+    min-width: unset; /* Flexibler für kleinere Bildschirme */
+    max-width: 100%; /* Sektionen untereinander auf kleineren Tablets */
+  }
+  .dashboard-sections-wrapper {
+    flex-direction: column; /* Sektionen immer untereinander */
+  }
+  .container {
+    padding: 30px;
+  }
+  h1 { font-size: 2.8em; }
+  h2 { font-size: 2.2em; }
+  h3 { font-size: 1.6em; }
 }
 
-.status-approved {
-  background-color: var(--status-approved);
-  color: #fff;
-}
+/* Für Mobile Geräte (typischerweise bis 767px) */
+@media (max-width: 767px) {
+  .app-layout {
+    flex-direction: column; /* Sidebar oben, Inhalt darunter */
+  }
+  .sidebar {
+    width: 100%; /* Sidebar volle Breite */
+    height: auto; /* Höhe wird durch Inhalt bestimmt */
+    position: relative; /* Nicht mehr sticky */
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-dark); /* Trennlinie unten */
+    box-shadow: var(--shadow-md);
+  }
+  .sidebar-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+  }
+  .sidebar-nav {
+    flex-direction: row; /* Nav-Items nebeneinander auf Mobile-Sidebar */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; /* Kleinerer Abstand */
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .sidebar-nav-item {
+    flex-basis: auto; /* Breite passt sich an Inhalt an */
+    padding: 8px 15px;
+    font-size: 0.9em;
+    margin-bottom: 0;
+  }
+  .sidebar-section-title {
+    display: none; /* Sektionstitel in Sidebar auf Mobile ausblenden */
+  }
+  .sidebar-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+  }
+  .sidebar-logout-button {
+    width: auto; /* Button Breite anpassen */
+    padding: 10px 20px;
+    font-size: 0.9em;
+  }
 
-.status-completed {
-  background-color: var(--status-completed);
-  color: var(--color-text-light);
-  border: 1px solid var(--color-border-dark);
+  .app-content {
+    padding: 20px;
+  }
+  .container {
+    padding: 25px;
+  }
+  h1 { font-size: 2.2em; }
+  h2 { font-size: 1.8em; }
+  h3 { font-size: 1.4em; }
+
+  .dashboard-title {
+    font-size: 2.5em;
+  }
+  .welcome-message {
+    font-size: 1em;
+  }
+  .admin-status {
+    font-size: 1em;
+  }
+  .dashboard-section {
+    padding: 25px;
+  }
+  .dashboard-section h3 {
+    font-size: 1.4em;
+  }
+  .nav-item {
+    padding: 12px 20px;
+    font-size: 0.9em;
+  }
+  .proposals-grid {
+    grid-template-columns: 1fr; /* Einzelne Spalte auf Mobile */
+  }
+  .proposal-card {
+    margin: 0 auto; /* Zentriert einzelne Karten */
+  }
 }
