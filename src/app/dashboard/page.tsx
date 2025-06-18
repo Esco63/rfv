@@ -4,18 +4,26 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { supabase } from '../../lib/supabase'; // Korrekter Pfad zum Supabase-Client
-import { User } from '@supabase/supabase-js'; // Typ-Import für User
+import { supabase } from '../../lib/supabase';
+import { User } from '@supabase/supabase-js';
+
+// Typdefinition für Profil (falls noch nicht global definiert)
+interface UserProfile {
+  id: string;
+  username: string;
+  is_admin: boolean;
+  created_at: string;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
-    const checkUserAndAdminStatus = async () => {
-      setLoading(true); // Setze loading am Anfang des Effekts auf true
+    const checkUserAndProfile = async () => {
+      setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
@@ -25,46 +33,41 @@ export default function DashboardPage() {
 
       setUser(user);
 
-      // Prüfe den Admin-Status aus der profiles Tabelle
+      // Profil abrufen, um Benutzername und Admin-Status zu erhalten
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('is_admin')
+        .select('*') // Alle Profil-Daten abrufen
         .eq('id', user.id)
         .single();
 
       if (profileError) {
-        console.error('Error fetching profile:', profileError.message);
-        // Auch wenn ein Fehler auftritt, ist der Benutzer kein Admin
-        setIsAdmin(false);
-      } else if (profile && profile.is_admin) {
-        setIsAdmin(true);
+        console.error('Fehler beim Abrufen des Profils:', profileError.message);
+        // Fallback: Wenn Profil nicht gefunden, behandeln als Nicht-Admin
+        setUserProfile({ id: user.id, username: user.email || 'Unbekannt', is_admin: false, created_at: '' });
+      } else if (profile) {
+        setUserProfile(profile);
       } else {
-        setIsAdmin(false);
+        // Falls kein Profil gefunden wird (was nach Registrierung nicht passieren sollte, aber als Fallback)
+        setUserProfile({ id: user.id, username: user.email || 'Unbekannt', is_admin: false, created_at: '' });
       }
       
-      setLoading(false); // Setze loading am Ende des Effekts auf false
+      setLoading(false);
     };
 
-    checkUserAndAdminStatus();
+    checkUserAndProfile();
 
-    // Listener für Auth-Zustandsänderungen
-    // KORRIGIERTE ZEILE: .data.subscription.unsubscribe() ist FALSCH
-    // Die Variable authListener ist bereits das Ergebnis von .data, also { subscription: ... }
-    // Daher ist es korrekt: authListener?.subscription.unsubscribe()
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (event === 'SIGNED_OUT') {
           router.push('/login');
         } else if (event === 'SIGNED_IN') {
           setUser(session?.user || null);
-          // Re-check admin status on sign in
-          checkUserAndAdminStatus(); // Erneut prüfen, falls sich der Benutzer anmeldet
+          checkUserAndProfile(); // Profil neu laden bei Anmeldung
         }
       }
     );
 
     return () => {
-      // DIES IST DIE KORREKTE ZEILE FÜR unsubscribe:
       authListener?.subscription.unsubscribe();
     };
   }, [router]);
@@ -73,46 +76,58 @@ export default function DashboardPage() {
     setLoading(true);
     const { error } = await supabase.auth.signOut();
     if (error) {
-      console.error('Logout error:', error.message);
+      console.error('Logout Fehler:', error.message);
     }
-    // useRouter.push('/login') wird durch onAuthStateChange ausgelöst
     setLoading(false);
   };
 
   if (loading) {
-    return <div className="container"><p>Lade Benutzerdaten...</p></div>;
+    return <div className="container" style={{ textAlign: 'center' }}><p>Lade Benutzerdaten...</p></div>;
   }
 
+  // Benutzername anzeigen, wenn verfügbar, sonst E-Mail
+  const displayName = userProfile?.username || user?.email || 'RockfordV-Bürger';
+
   return (
-    <div className="container">
-      <h2>Willkommen, {user?.email}!</h2>
-      <p>Du bist im geschützten Dashboard-Bereich.</p>
-      {isAdmin && <p style={{ color: 'green', fontWeight: 'bold' }}>(Du bist ein Admin)</p>}
+    <div className="container dashboard-container">
+      <h1 className="dashboard-title">Willkommen, {displayName}!</h1>
+      <p className="welcome-message">Dein Zugang zum RockfordV-Wirtschaftspanel.</p>
+      {userProfile?.is_admin && <p className="admin-status">(Du bist ein Administrator)</p>}
 
-      <button onClick={handleLogout} disabled={loading}>
-        {loading ? 'Logge aus...' : 'Logout'}
-      </button>
+      <div className="dashboard-section">
+        <h3>Community-Aktionen</h3>
+        <nav className="dashboard-nav">
+          <Link href="/proposals/new" className="nav-item">
+            Neuen Vorschlag einreichen
+          </Link>
+          <Link href="/proposals/my" className="nav-item">
+            Meine Vorschläge ansehen
+          </Link>
+          <Link href="/proposals/all" className="nav-item">
+            Alle Vorschläge ansehen
+          </Link>
+        </nav>
+      </div>
 
-      <div style={{ marginTop: '30px' }}>
-        <h3>Aktionen:</h3>
-        <p>
-          <Link href="/proposals/new">Neuen Vorschlag einreichen</Link>
-        </p>
-        <p>
-          <Link href="/proposals">Alle Vorschläge ansehen</Link>
-        </p>
+      {userProfile?.is_admin && (
+        <div className="dashboard-section admin-section">
+          <h3>Admin-Bereich</h3>
+          <nav className="dashboard-nav">
+            <Link href="/admin/proposals/review" className="nav-item admin-nav-item">
+              Vorschläge zur Überprüfung
+            </Link>
+            <Link href="/admin/users" className="nav-item admin-nav-item">
+              Benutzer verwalten
+            </Link>
+            {/* Weitere Admin-Links hier */}
+          </nav>
+        </div>
+      )}
 
-        {isAdmin && (
-          <div style={{ borderTop: '1px solid #eee', paddingTop: '20px', marginTop: '20px' }}>
-            <h3>Admin-Bereich:</h3>
-            <p>
-              <Link href="/admin/proposals/review">Vorschläge zur Überprüfung</Link>
-            </p>
-            <p>
-              <Link href="/admin/users">Benutzer verwalten</Link> {/* Später implementieren */}
-            </p>
-          </div>
-        )}
+      <div className="dashboard-footer">
+        <button onClick={handleLogout} disabled={loading}>
+          Logout
+        </button>
       </div>
     </div>
   );

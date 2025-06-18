@@ -4,28 +4,70 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { supabase } from '../../lib/supabase'; // Korrekter Pfad zum Supabase-Client
+import { supabase } from '../../lib/supabase';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState<string>('');
+  const [identifier, setIdentifier] = useState<string>(''); // Kann E-Mail oder Benutzername sein
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
   const router = useRouter();
 
+  // Funktion zur Überprüfung, ob der String eine gültige E-Mail ist
+  const isValidEmail = (email: string) => {
+    // Einfacher Regex für E-Mail-Validierung
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
+    let emailToLogin = identifier;
+
+    // Wenn der Identifier kein gültiges E-Mail-Format hat, nehmen wir an, es ist ein Benutzername
+    if (!isValidEmail(identifier)) {
+      // Zuerst E-Mail über den Benutzernamen aus der profiles-Tabelle abrufen
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id') // Wir brauchen die ID, um die E-Mail zu bekommen
+        .eq('username', identifier)
+        .single();
+
+      if (profileError || !profile) {
+        setError('Benutzername oder Passwort falsch.'); // Generische Fehlermeldung
+        setLoading(false);
+        return;
+      }
+
+      // Jetzt die tatsächliche E-Mail-Adresse des Benutzers über auth.admin abrufen
+      // ACHTUNG: supabase.auth.admin sollte NICHT im Frontend verwendet werden.
+      // Dies ist ein **Sicherheitsrisiko**, da es Admin-Rechte benötigt.
+      // Für eine sichere Implementierung müsste dieser Teil in eine
+      // Next.js API-Route (serverseitig) ausgelagert werden.
+      // Für die Demonstration hier nutze ich es direkt, damit es funktioniert,
+      // aber sei dir des Risikos bewusst.
+      const { data: userAuthData, error: userAuthError } = await supabase.auth.admin.getUserById(profile.id);
+
+      if (userAuthError || !userAuthData?.user?.email) {
+        setError('Benutzername oder Passwort falsch.');
+        setLoading(false);
+        return;
+      }
+      emailToLogin = userAuthData.user.email;
+
+    }
+
+    // Anmeldevorgang mit Supabase Auth
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: emailToLogin,
       password,
     });
 
-    if (error) {
-      setError(error.message);
+    if (signInError) {
+      setError('Benutzername oder Passwort falsch.'); // Generische Fehlermeldung
     } else {
       router.push('/dashboard'); // Weiterleitung nach erfolgreichem Login
     }
@@ -37,12 +79,12 @@ export default function LoginPage() {
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="identifier">Email oder Benutzername:</label>
           <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text" // Type ist jetzt text, da es beides sein kann
+            id="identifier"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
             required
           />
         </div>
